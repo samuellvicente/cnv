@@ -17,10 +17,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WebServer {
+    
+        static Logger logger = Logger.getLogger("Log");  
+        static FileHandler fh;  
 
 	public static void main(final String[] args) throws Exception {
+            
+                fh = new FileHandler("WebServerLogFile.log");  
+                logger.addHandler(fh);
 
 		//final HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 8000), 0);
 
@@ -30,8 +39,9 @@ public class WebServer {
 
 		server.createContext("/sudoku", new MyHandler());
 
-		// be aware! infinite pool of threads!
-		server.setExecutor(Executors.newCachedThreadPool());
+		// be aware! infinite pool of threads! // now it is hardcoded but we need to control it
+                int MAX_N_THREADS = 2;
+		server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
 		server.start();
 
 		System.out.println(server.getAddress().toString());
@@ -56,9 +66,21 @@ public class WebServer {
         return buf.toString();
     }
 	static class MyHandler implements HttpHandler {
+            
+            // we could use ThreadLocal to store request info
+            private static final ThreadLocal<String> threadId =
+                new ThreadLocal<String>() {
+                    @Override protected String initialValue() {
+                        return "42";
+                }
+            };
 		@Override
 		public void handle(final HttpExchange t) throws IOException {
 
+                        logger.log(Level.INFO, Thread.currentThread().toString());
+                        logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
+                        logger.info(threadId.get());
+                        
 			// Get the query.
 			final String query = t.getRequestURI().getQuery();
 			System.out.println("> Query:\t" + query);
@@ -76,7 +98,8 @@ public class WebServer {
 			newArgs.add("-b");
 			newArgs.add(parseRequestBody(t.getRequestBody()));
 
-			newArgs.add("-d");
+                        // Debbuging flag
+			//newArgs.add("-d");
 
 			// Store from ArrayList into regular String[].
 			final String[] args = new String[newArgs.size()];
@@ -97,6 +120,8 @@ public class WebServer {
 
 			// Send response to browser.
 			final Headers hdrs = t.getResponseHeaders();
+                        
+                        //logger.info(BIT.ICountCNV.log.remove(0));
 
             //t.sendResponseHeaders(200, responseFile.length());
 

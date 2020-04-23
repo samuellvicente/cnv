@@ -1,3 +1,5 @@
+package samples;
+
 //
 // StatisticsTool.java
 //

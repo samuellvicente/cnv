@@ -1,4 +1,4 @@
-package samples;
+package BIT;
 
 /* ICount.java
  * Sample program using BIT -- counts the number of instructions executed.
@@ -14,14 +14,21 @@ package samples;
  * University of Colorado at Boulder (303) 492-5647.
  */
 
+import samples.*;
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
-public class ICount {
+public class ICountCNV {
     private static PrintStream out = null;
-    private static int i_count = 0, b_count = 0, m_count = 0;
+    public static int i_count = 0, b_count = 0, m_count = 0;
+    
+    public static final ArrayList<String> log= new ArrayList<String>();
+
     
     /* main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
@@ -40,14 +47,14 @@ public class ICount {
                 // see java.util.Enumeration for more information on Enumeration class
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements(); ) {
                     Routine routine = (Routine) e.nextElement();
-					routine.addBefore("ICount", "mcount", new Integer(1));
+					routine.addBefore("BIT.ICountCNV", "mcount", new Integer(1));
                     
                     for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("ICount", "count", new Integer(bb.size()));
+                        bb.addBefore("BIT.ICountCNV", "count", new Integer(bb.size()));
                     }
                 }
-                ci.addAfter("ICount", "printICount", ci.getClassName());
+                ci.addAfter("BIT.ICountCNV", "logICount", ci.getClassName());
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }
@@ -57,7 +64,10 @@ public class ICount {
         System.out.println(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
     }
     
-
+    public static synchronized void logICount(String foo) {
+        log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+    }
+    
     public static synchronized void count(int incr) {
         i_count += incr;
         b_count++;

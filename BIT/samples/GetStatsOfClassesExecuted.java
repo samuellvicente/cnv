@@ -1,3 +1,5 @@
+package samples;
+
 import java.io.*;
 import java.util.*;
 import BIT.highBIT.*;
