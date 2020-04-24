@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONArray;
+import pt.ulisboa.tecnico.cnv.RequestInfo;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
@@ -16,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -24,7 +26,8 @@ import java.util.logging.Logger;
 public class WebServer {
     
         static Logger logger = Logger.getLogger("Log");  
-        static FileHandler fh;  
+        static FileHandler fh;
+        static ConcurrentLinkedDeque<RequestInfo> requestsInfo = new ConcurrentLinkedDeque<>();
 
 	public static void main(final String[] args) throws Exception {
             
@@ -66,21 +69,22 @@ public class WebServer {
         return buf.toString();
     }
 	static class MyHandler implements HttpHandler {
-            
             // we could use ThreadLocal to store request info
-            private static final ThreadLocal<String> threadId =
-                new ThreadLocal<String>() {
-                    @Override protected String initialValue() {
-                        return "42";
+			//possible interference with pools
+            private static final ThreadLocal<RequestInfo> requestInfo = new ThreadLocal<RequestInfo>() {
+                    @Override protected RequestInfo initialValue() {
+                        return new RequestInfo(Thread.currentThread().getName());
                 }
             };
 		@Override
 		public void handle(final HttpExchange t) throws IOException {
+		    try{
 
-                        logger.log(Level.INFO, Thread.currentThread().toString());
-                        logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
-                        logger.info(threadId.get());
-                        
+
+			logger.log(Level.INFO, Thread.currentThread().toString());
+			logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
+			logger.info(Thread.currentThread().getName());
+
 			// Get the query.
 			final String query = t.getRequestURI().getQuery();
 			System.out.println("> Query:\t" + query);
@@ -98,7 +102,7 @@ public class WebServer {
 			newArgs.add("-b");
 			newArgs.add(parseRequestBody(t.getRequestBody()));
 
-                        // Debbuging flag
+			// Debbuging flag
 			//newArgs.add("-d");
 
 			// Store from ArrayList into regular String[].
@@ -108,6 +112,7 @@ public class WebServer {
 				args[i] = arg;
 				i++;
 			}
+			requestInfo.get().setRequestArgs(args);
 			// Get user-provided flags.
 			final SolverArgumentParser ap = new SolverArgumentParser(args);
 
@@ -117,36 +122,44 @@ public class WebServer {
 			//Solve sudoku puzzle
 			JSONArray solution = s.solveSudoku();
 
+			requestsInfo.addLast(requestInfo.get());
 
 			// Send response to browser.
 			final Headers hdrs = t.getResponseHeaders();
-                        
-                        //logger.info(BIT.ICountCNV.log.remove(0));
 
-            //t.sendResponseHeaders(200, responseFile.length());
+			//logger.info(BIT.ICountCNV.log.remove(0));
+
+			//t.sendResponseHeaders(200, responseFile.length());
 
 
 			///hdrs.add("Content-Type", "image/png");
-            hdrs.add("Content-Type", "application/json");
+			hdrs.add("Content-Type", "application/json");
 
 			hdrs.add("Access-Control-Allow-Origin", "*");
 
-            hdrs.add("Access-Control-Allow-Credentials", "true");
+			hdrs.add("Access-Control-Allow-Credentials", "true");
 			hdrs.add("Access-Control-Allow-Methods", "POST, GET, HEAD, OPTIONS");
 			hdrs.add("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
-            t.sendResponseHeaders(200, solution.toString().length());
+			t.sendResponseHeaders(200, solution.toString().length());
 
 
-            final OutputStream os = t.getResponseBody();
-            OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-            osw.write(solution.toString());
-            osw.flush();
-            osw.close();
+			final OutputStream os = t.getResponseBody();
+			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+			osw.write(solution.toString());
+			osw.flush();
+			osw.close();
 
 			os.close();
 
 			System.out.println("> Sent response to " + t.getRemoteAddress().toString());
+			} finally {
+				requestInfo.remove();
+				//REMOVE ME
+				requestsInfo.getLast().toString();
+			}
+
+
 		}
 	}
 }

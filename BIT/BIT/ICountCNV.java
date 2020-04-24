@@ -65,9 +65,11 @@ public class ICountCNV {
     }
     
     public static synchronized void logICount(String foo) {
+        ThreadLocal.get().setMetrics(i_count,b_count,m_count);
         log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+
     }
-    
+
     public static synchronized void count(int incr) {
         i_count += incr;
         b_count++;
