@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cnv;
+package pt.ulisboa.tecnico.cnv.metrics;
 
 public class ThreadLocalRequestInfo {
 

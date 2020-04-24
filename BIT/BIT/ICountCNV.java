@@ -14,14 +14,10 @@ package BIT;
  * University of Colorado at Boulder (303) 492-5647.
  */
 
-import pt.ulisboa.tecnico.cnv.ThreadLocalRequestInfo;
-import samples.*;
+import pt.ulisboa.tecnico.cnv.metrics.ThreadLocalRequestInfo;
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class ICountCNV {
@@ -29,7 +25,6 @@ public class ICountCNV {
 
     public static final ArrayList<String> log= new ArrayList<String>();
 
-    
     /* main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
      */
