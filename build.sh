@@ -15,7 +15,7 @@ export CLASSPATH=$CLASSPATH:$PWD/instrumented:$PWD/project:$PWD/BIT:$PWD/BIT/sam
 
 # # Java locations
 
-#source java-config-rnl-vm.sh
+source java-config-rnl-vm.sh
 export _JAVA_OPTIONS="-XX:-UseSplitVerifier "$_JAVA_OPTIONS
 
 

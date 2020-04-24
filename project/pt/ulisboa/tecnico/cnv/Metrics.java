@@ -22,4 +22,8 @@ public class Metrics {
     public int getC_count() {
         return c_count;
     }
+
+    public String toString(){
+        return String.format("i_count:%d; i_count:%d; i_count:%d;", this.i_count, this.b_count, this.c_count);
+    }
 }

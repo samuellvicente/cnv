@@ -14,6 +14,7 @@ package BIT;
  * University of Colorado at Boulder (303) 492-5647.
  */
 
+import pt.ulisboa.tecnico.cnv.ThreadLocalRequestInfo;
 import samples.*;
 import BIT.highBIT.*;
 import java.io.*;
@@ -65,7 +66,7 @@ public class ICountCNV {
     }
     
     public static synchronized void logICount(String foo) {
-        ThreadLocal.get().setMetrics(i_count,b_count,m_count);
+        ThreadLocalRequestInfo.setMetrics(i_count, b_count, m_count);
         log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
 
     }
