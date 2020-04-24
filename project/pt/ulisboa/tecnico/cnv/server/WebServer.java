@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONArray;
+import pt.ulisboa.tecnico.cnv.metrics.RequestArgs;
 import pt.ulisboa.tecnico.cnv.metrics.RequestInfo;
 import pt.ulisboa.tecnico.cnv.metrics.ThreadLocalRequestInfo;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
@@ -16,6 +17,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,11 +27,14 @@ public class WebServer {
 
 	static Logger logger = Logger.getLogger("Log");
 	static FileHandler fh;
-	static ConcurrentLinkedDeque<RequestInfo> requestsInfo = new ConcurrentLinkedDeque<>();
+	protected static ConcurrentLinkedDeque<RequestInfo> requestsInfo = new ConcurrentLinkedDeque<>();
 
 	public static void main(final String[] args) throws Exception {
 		fh = new FileHandler("WebServerLogFile.log");
 		logger.addHandler(fh);
+
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.scheduleAtFixedRate(new TempStorage(), 10, 10, TimeUnit.SECONDS);
 
 		//final HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 8000), 0);
 		final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
@@ -95,7 +101,7 @@ public class WebServer {
 					i++;
 				}
 				logger.info(args.toString());
-				ThreadLocalRequestInfo.get().setRequestArgs(args);
+				ThreadLocalRequestInfo.get().setRequestArgs(new RequestArgs(args));
 				// Get user-provided flags.
 				final SolverArgumentParser ap = new SolverArgumentParser(args);
 
@@ -134,7 +140,8 @@ public class WebServer {
 
 				os.close();
 
-				System.out.println(ThreadLocalRequestInfo.get().getMetrics().toString());
+				System.out.println(ThreadLocalRequestInfo.get().toString());
+				System.out.println(requestsInfo.size());
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 			} finally {
 				ThreadLocalRequestInfo.remove();

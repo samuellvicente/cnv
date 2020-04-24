@@ -66,11 +66,11 @@ public class ICountCNV {
     //}
 
     public static synchronized void count(int incr) {
-        ThreadLocalRequestInfo.get().getMetrics().incrCount(incr);
+        ThreadLocalRequestInfo.get().incGet().incrCount(incr);
     }
 
     public static synchronized void mcount(int incr) {
-        ThreadLocalRequestInfo.get().getMetrics().incrMCount();
+        ThreadLocalRequestInfo.get().incGet().incrMCount();
     }
 }
 

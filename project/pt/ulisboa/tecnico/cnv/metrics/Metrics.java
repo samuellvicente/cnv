@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cnv.metrics;
 
-public class Metrics {
+import java.io.Serializable;
+
+public class Metrics implements Serializable {
     private int i_count;
     private int b_count;
     private int m_count;
