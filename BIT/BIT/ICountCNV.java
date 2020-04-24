@@ -47,14 +47,14 @@ public class ICountCNV {
                 // see java.util.Enumeration for more information on Enumeration class
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements(); ) {
                     Routine routine = (Routine) e.nextElement();
-					routine.addBefore("BIT.ICountCNV", "mcount", new Integer(1));
+					routine.addBefore("BIT/ICountCNV", "mcount", new Integer(1));
                     
                     for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("BIT.ICountCNV", "count", new Integer(bb.size()));
+                        bb.addBefore("BIT/ICountCNV", "count", new Integer(bb.size()));
                     }
                 }
-                ci.addAfter("BIT.ICountCNV", "logICount", ci.getClassName());
+                ci.addAfter("BIT/ICountCNV", "logICount", ci.getClassName());
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }
@@ -75,6 +75,7 @@ public class ICountCNV {
 
     public static synchronized void mcount(int incr) {
 		m_count++;
+                //System.out.println(m_count);
     }
 }
 
