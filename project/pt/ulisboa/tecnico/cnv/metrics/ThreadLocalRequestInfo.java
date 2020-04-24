@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cnv;
+package pt.ulisboa.tecnico.cnv.metrics;
 
 public class ThreadLocalRequestInfo {
 
@@ -7,14 +7,6 @@ public class ThreadLocalRequestInfo {
             return new RequestInfo(Thread.currentThread().getName());
         }
     };
-
-    public static void setRequestArgs(String[] a) {
-            requestInfo.get().setRequestArgs(a);
-        }
-
-    public static void setMetrics(int i,int b,int m) {
-        requestInfo.get().setMetrics(i, b, m);
-    }
 
     public static void remove() {
             requestInfo.remove();

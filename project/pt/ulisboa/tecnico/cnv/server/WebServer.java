@@ -5,21 +5,20 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONArray;
-import pt.ulisboa.tecnico.cnv.RequestInfo;
-import pt.ulisboa.tecnico.cnv.ThreadLocalRequestInfo;
+import pt.ulisboa.tecnico.cnv.metrics.RequestArgs;
+import pt.ulisboa.tecnico.cnv.metrics.RequestInfo;
+import pt.ulisboa.tecnico.cnv.metrics.ThreadLocalRequestInfo;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,21 +27,18 @@ public class WebServer {
 
 	static Logger logger = Logger.getLogger("Log");
 	static FileHandler fh;
-	static ConcurrentLinkedDeque<RequestInfo> requestsInfo = new ConcurrentLinkedDeque<>();
+	protected static ConcurrentLinkedDeque<RequestInfo> requestsInfo = new ConcurrentLinkedDeque<>();
 
 	public static void main(final String[] args) throws Exception {
-
 		fh = new FileHandler("WebServerLogFile.log");
 		logger.addHandler(fh);
 
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.scheduleAtFixedRate(new TempStorage(), 10, 10, TimeUnit.SECONDS);
+
 		//final HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 8000), 0);
-
 		final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-
-
-
 		server.createContext("/sudoku", new MyHandler());
-
 		// be aware! infinite pool of threads! // now it is hardcoded but we need to control it
 		//int MAX_N_THREADS = 2;
 		//server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
@@ -57,12 +53,10 @@ public class WebServer {
 		BufferedReader br = new BufferedReader(isr);
 
 		// From now on, the right way of moving from bytes to utf-8 characters:
-
 		int b;
 		StringBuilder buf = new StringBuilder(512);
 		while ((b = br.read()) != -1) {
 			buf.append((char) b);
-
 		}
 
 		br.close();
@@ -76,7 +70,6 @@ public class WebServer {
 		@Override
 		public void handle(final HttpExchange t) throws IOException {
 			try{
-
 				logger.log(Level.INFO, Thread.currentThread().toString());
 				logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
 				logger.info(Thread.currentThread().getName());
@@ -109,7 +102,7 @@ public class WebServer {
 					i++;
 				}
 				logger.info(args.toString());
-				ThreadLocalRequestInfo.setRequestArgs(args);
+				ThreadLocalRequestInfo.get().setRequestArgs(new RequestArgs(args));
 				// Get user-provided flags.
 				final SolverArgumentParser ap = new SolverArgumentParser(args);
 
@@ -119,7 +112,7 @@ public class WebServer {
 				//Solve sudoku puzzle
 				JSONArray solution = s.solveSudoku();
 
-				//logger.info("adding to coiso");
+				//saving requestInfo
 				requestsInfo.addLast(ThreadLocalRequestInfo.get());
 
 				// Send response to browser.
@@ -128,7 +121,6 @@ public class WebServer {
 				//logger.info(BIT.ICountCNV.log.remove(0));
 
 				//t.sendResponseHeaders(200, responseFile.length());
-
 
 				///hdrs.add("Content-Type", "image/png");
 				hdrs.add("Content-Type", "application/json");
@@ -141,7 +133,6 @@ public class WebServer {
 
 				t.sendResponseHeaders(200, solution.toString().length());
 
-
 				final OutputStream os = t.getResponseBody();
 				OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 				osw.write(solution.toString());
@@ -150,9 +141,8 @@ public class WebServer {
 
 				os.close();
 
-				System.out.println("METRICS");
+				System.out.println(ThreadLocalRequestInfo.get().toString());
 				System.out.println(requestsInfo.size());
-                                System.out.println(ThreadLocalRequestInfo.get().getMetrics().toString());
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 			} finally {
                             ThreadLocalRequestInfo.remove();
