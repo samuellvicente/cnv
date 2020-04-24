@@ -22,6 +22,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pt.ulisboa.tecnico.cnv.server.WebServer;
 
 public class ICountCNV {
     private static PrintStream out = null;
@@ -65,8 +66,8 @@ public class ICountCNV {
     }
     
     public static synchronized void logICount(String foo) {
-        ThreadLocal.get().setMetrics(i_count,b_count,m_count);
-        log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+        WebServer.MyHandler.requestInfo.get().setMetrics(i_count,b_count,m_count);
+        //log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
 
     }
 

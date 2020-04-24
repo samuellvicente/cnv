@@ -68,10 +68,10 @@ public class WebServer {
 
         return buf.toString();
     }
-	static class MyHandler implements HttpHandler {
+	public static class MyHandler implements HttpHandler {
             // we could use ThreadLocal to store request info
 			//possible interference with pools
-            private static final ThreadLocal<RequestInfo> requestInfo = new ThreadLocal<RequestInfo>() {
+            public static final ThreadLocal<RequestInfo> requestInfo = new ThreadLocal<RequestInfo>() {
                     @Override protected RequestInfo initialValue() {
                         return new RequestInfo(Thread.currentThread().getName());
                 }
@@ -153,6 +153,7 @@ public class WebServer {
 			os.close();
 
 			System.out.println("> Sent response to " + t.getRemoteAddress().toString());
+                        System.out.println("> Icount: "+String.valueOf(WebServer.MyHandler.requestInfo.get().getMetrics().getI_count()));
 			} finally {
 				requestInfo.remove();
 				//REMOVE ME

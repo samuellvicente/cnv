@@ -25,7 +25,7 @@ public class RequestInfo {
     public Metrics getMetrics() {
         return metrics;
     }
-    void setMetrics (int i_count, int b_count, int c_count) {
+    public void setMetrics (int i_count, int b_count, int c_count) {
         this.metrics = new Metrics(i_count, b_count, c_count);
     }
 
