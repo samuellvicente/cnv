@@ -154,7 +154,7 @@ public class WebServer {
                                 System.out.println(ThreadLocalRequestInfo.get().getMetrics().toString());
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 			} finally {
-				ThreadLocalRequestInfo.remove();
+                            ThreadLocalRequestInfo.remove();
 			}
 
 

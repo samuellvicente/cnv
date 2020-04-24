@@ -24,6 +24,10 @@ rm project/pt/ulisboa/tecnico/cnv/server/*class
 rm project/pt/ulisboa/tecnico/cnv/solver/*class
 rm BIT/BIT/*class
 
+mkdir -p instrumented/pt/ulisboa/tecnico/cnv/solver/
+mkdir -p instrumented/pt/ulisboa/tecnico/cnv/server/
+mkdir -p instrumented/pt/ulisboa/tecnico/cnv/util/
+
 
 export _JAVA_OPTIONS="-XX:-UseSplitVerifier "$_JAVA_OPTIONS
 
