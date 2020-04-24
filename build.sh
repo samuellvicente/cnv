@@ -8,9 +8,9 @@
 #### Java locations
 # source your own java config script or edit one of the templates
 
-source java-config-windows.sh
+#source java-config-windows.sh
 #source java-config-rnl-vm.sh
-#source java-config-aws.sh
+source java-config-aws.sh
 
 
 
@@ -19,13 +19,8 @@ source java-config-windows.sh
 #### Project setup
 export CLASSPATH=$CLASSPATH:$PWD/instrumented:$PWD/project:$PWD/BIT:$PWD/BIT/samples:$PWD/BIT/BIT
 
-# Clean up
-rm instrumented/pt/ulisboa/tecnico/cnv/server/*class
-rm instrumented/pt/ulisboa/tecnico/cnv/util/*class
-rm instrumented/pt/ulisboa/tecnico/cnv/solver/*class
-rm project/pt/ulisboa/tecnico/cnv/server/*class
-rm project/pt/ulisboa/tecnico/cnv/solver/*class
-rm BIT/BIT/*class
+# Remove old .class files
+source clean.sh
 
 # Making sure the folders required by the instrumentation exist
 mkdir -p instrumented/pt/ulisboa/tecnico/cnv/solver/

@@ -28,7 +28,9 @@ Web Servers:
 
 
 
-Load Balancer: AWS Classic
+Load Balancer: AWS Classic Load Balancer
+
+/sudoku?s=BFS&un=0&n1=9&n2=9&i=SUDOKU_PUZZLE_9x9_101
 
 Auto-Scaler: AWS Auto-scaling group
 
@@ -39,6 +41,29 @@ Metrics Storage System: Local storage in the instance of each webserver.
 
 
 Short Description:
+
+
+
+
+ Define Load BalancerEdit load balancer definition
+Load Balancer name: LBcheck
+Scheme: internet-facing
+Port Configuration: 80 (HTTP) forwarding to 8000 (HTTP)
+ Configure Health CheckEdit health check
+Ping Target:    HTTP:8000/sudoku?s=BFS&un=0&n1=9&n2=9&i=SUDOKU_PUZZLE_9x9_101
+Timeout:    10 seconds
+Interval:   30 seconds
+Unhealthy threshold:    2
+Healthy threshold:  10
+ Add EC2 InstancesEdit instances
+Cross-Zone Load Balancing:  Enabled
+Connection Draining:    Enabled, 300 seconds
+Instances:  
+ VPC InformationEdit subnets
+VPC:    vpc-32353748
+Subnets:    subnet-a9199fe4
+ Security groupsEdit security groups
+Security groups:    sg-087c9750048a6c42c
 
 
 

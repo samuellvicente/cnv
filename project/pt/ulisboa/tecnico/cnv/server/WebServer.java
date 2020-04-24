@@ -44,8 +44,9 @@ public class WebServer {
 		server.createContext("/sudoku", new MyHandler());
 
 		// be aware! infinite pool of threads! // now it is hardcoded but we need to control it
-		int MAX_N_THREADS = 2;
-		server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
+		//int MAX_N_THREADS = 2;
+		//server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
+                server.setExecutor(Executors.newCachedThreadPool());
 		server.start();
 
 		System.out.println(server.getAddress().toString());
