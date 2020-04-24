@@ -1,0 +1,55 @@
+#### How to run
+
+Dependencies:
+Java 7 JDK
+AWS Java SDK (eventually)
+
+
+1. Edit the location of the dependencies in the start of the build.sh script;
+    1.1 Search for the follow lines:
+            export AWS_SDK="$PWD/aws-java-sdk-1.11.751"
+            source java-config-aws.sh
+    1.2 Edit the java variables in the "java-config-aws.sh" script or one of the other templates.
+
+2. Set the *.sh scripts as executable using your system permisions;
+    (chmod 755 in linux)
+    At least the auto_run.sh script needs to have permissions to be executed.
+
+3. Run auto_run.sh to setup, compile and run the WebServer;
+
+
+#### Architecture
+
+More information in the report.
+
+
+Web Servers: 
+        Relevant Classes:
+
+
+
+Load Balancer: AWS Classic
+
+Auto-Scaler: AWS Auto-scaling group
+
+
+Metrics Storage System: Local storage in the instance of each webserver.
+        Relevant Classes:
+
+
+
+Short Description:
+
+
+
+
+
+
+#### System Configurations
+
+
+Load-Balancer:
+
+
+
+Auto-Scaler:
