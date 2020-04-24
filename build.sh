@@ -12,6 +12,7 @@ export CLASSPATH=$CLASSPATH:$PWD/instrumented:$PWD/project:$PWD/BIT:$PWD/BIT/sam
 
 # # Java locations
 
+source java_config_windows.sh
 #source java-config-rnl-vm.sh
 
 
