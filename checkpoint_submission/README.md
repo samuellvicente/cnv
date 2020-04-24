@@ -1,51 +1,55 @@
-#### How to run
+# How to run
 
-Dependencies:
-Java 7 JDK
-AWS Java SDK (eventually)
+###Dependencies:
+* Java 7 JDK
+* AWS Java SDK (eventually)
 
 
 1. Edit the location of the dependencies in the start of the build.sh script;
-    1.1 Search for the follow lines:
-            export AWS_SDK="$PWD/aws-java-sdk-1.11.751"
-            source java-config-aws.sh
-    1.2 Edit the java variables in the "java-config-aws.sh" script or one of the other templates.
+
+   1.1 Search for the follow lines:
+   * export AWS_SDK="$PWD/aws-java-sdk-1.11.751"
+   * source java-config-aws.sh
+   
+   1.2 Edit the java variables in the "java-config-aws.sh" script or one of the other templates.
 
 2. Set the *.sh scripts as executable using your system permisions;
     (chmod 755 in linux)
     At least the auto_run.sh script needs to have permissions to be executed.
 
 3. Running the server:
+
     3.1 Edit the /etc/rc.local file, add the path to the auto_run.sh script at the end to be executed;
         Mark the /etc/rc.local file as executable;
+        
     OR
+    
    3.2  Run auto_run.sh to setup, compile and run the WebServer;
 
 
-#### Architecture
+# Architecture
 
 More information in the report.
 
+###WebServer:
 
-Web Servers: 
-        Relevant Classes:
+Relevant Classes:
+* ThreadLocalRequestInfo: Holds a thread local global variable of class RequestInfo that gathers all info about the request and its metrics,if the solver class is instrumented. 
+* ICountCNV: On the instrument class we increment directly in that thread local variable to avoid sync problems between threads and to access elsewhere in the code in that thread.
+* WebServer: ConcurrentLinkedDeque that stores requestInfo that is added to when thread finishes dealing with the request.
 
+###Load Balancer: 
+* AWS Classic Load Balancer
 
+###Auto-Scaler: 
+* AWS Auto-scaling group
 
-Load Balancer: AWS Classic Load Balancer
+###Metrics Storage System: 
+* Local storage in the instance of each webserver.
 
-Auto-Scaler: AWS Auto-scaling group
-
-
-Metrics Storage System: Local storage in the instance of each webserver.
-        Relevant Classes:
-
-
-
-Short Description:
-
-
-
+Relevant Classes:
+* TempStorage: Runnable class that writes to file. Reads file, empties RequestInfo queue from Webserver and writes again.
+* WebServer: Has a SingleThreadScheduledExecutor that fires every 10s responsible of reading the RequestInfo queue that saves the context of each thread and writing it to a stats.backup file.
 
 Load Balancer
 Load Balancer name: LBcheck

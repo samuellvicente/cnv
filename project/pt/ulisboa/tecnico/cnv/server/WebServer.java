@@ -142,7 +142,6 @@ public class WebServer {
 				os.close();
 
 				System.out.println(ThreadLocalRequestInfo.get().toString());
-				System.out.println(requestsInfo.size());
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 			} finally {
                             ThreadLocalRequestInfo.remove();

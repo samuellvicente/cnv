@@ -50,6 +50,7 @@ public class TempStorage implements Runnable {
     public void run() {
         LinkedList<RequestInfo> stats = TempStorage.loadStats();
 
+        System.out.println(WebServer.requestsInfo.size());
         System.out.println(stats.size());
         while (!WebServer.requestsInfo.isEmpty()){
             stats.add(WebServer.requestsInfo.removeFirst());
