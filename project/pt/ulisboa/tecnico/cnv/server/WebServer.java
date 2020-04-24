@@ -78,8 +78,8 @@ public class WebServer {
 		public void handle(final HttpExchange t) throws IOException {
 
                         logger.log(Level.INFO, Thread.currentThread().toString());
-                        logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
-                        logger.info(threadId.get());
+                        //logger.log(Level.INFO, String.valueOf(Thread.activeCount()));
+                        //logger.info(threadId.get());
                         
 			// Get the query.
 			final String query = t.getRequestURI().getQuery();
