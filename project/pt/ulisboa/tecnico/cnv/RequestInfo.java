@@ -8,25 +8,23 @@ public class RequestInfo {
     public RequestInfo(String threadName) {
         this.threadName = threadName;
         this.requestArgs = null;
-        this.metrics = null;
+        this.metrics = new Metrics();
     }
 
     public String getThreadId() {
-        return threadName;
+        return this.threadName;
     }
 
     public String[] getRequestArgs() {
-        return requestArgs;
+        return this.requestArgs;
     }
+
     public void setRequestArgs(String[] requestArgs) {
         this.requestArgs = requestArgs;
     }
 
     public Metrics getMetrics() {
-        return metrics;
-    }
-    void setMetrics (int i_count, int b_count, int c_count) {
-        this.metrics = new Metrics(i_count, b_count, c_count);
+        return this.metrics;
     }
 
     public String toString(){

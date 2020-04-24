@@ -8,14 +8,6 @@ public class ThreadLocalRequestInfo {
         }
     };
 
-    public static void setRequestArgs(String[] a) {
-            requestInfo.get().setRequestArgs(a);
-        }
-
-    public static void setMetrics(int i,int b,int m) {
-        requestInfo.get().setMetrics(i, b, m);
-    }
-
     public static void remove() {
             requestInfo.remove();
         }

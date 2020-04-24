@@ -26,8 +26,7 @@ import java.util.logging.Logger;
 
 public class ICountCNV {
     private static PrintStream out = null;
-    public static int i_count = 0, b_count = 0, m_count = 0;
-    
+
     public static final ArrayList<String> log= new ArrayList<String>();
 
     
@@ -61,25 +60,22 @@ public class ICountCNV {
         }
     }
     
-    public static synchronized void printICount(String foo) {
-        System.out.println(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
-    }
+    //public static synchronized void printICount(String foo) {
+    //    System.out.println(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+    //}
     
-    public static synchronized void logICount(String foo) {
-        ThreadLocalRequestInfo.setMetrics(i_count, b_count, m_count);
-        log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+    //public static synchronized void logICount(String foo) {
+    //    ThreadLocalRequestInfo.setMetrics(i_count, b_count, m_count);
+    //    log.add(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
 
-    }
+    //}
 
     public static synchronized void count(int incr) {
-        i_count += incr;
-        b_count++;
-        ThreadLocalRequestInfo.setMetrics(i_count, b_count, m_count);
+        ThreadLocalRequestInfo.get().getMetrics().incrCount(incr);
     }
 
     public static synchronized void mcount(int incr) {
-		m_count++;
-                ThreadLocalRequestInfo.setMetrics(i_count, b_count, m_count);
+        ThreadLocalRequestInfo.get().getMetrics().incrMCount();
     }
 }
 
