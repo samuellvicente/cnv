@@ -6,3 +6,7 @@
 nbproject/
 build.xml
 manifest.mf
+project/pt/ulisboa/tecnico/cnv/**/*.class
+instrumented/pt/ulisboa/tecnico/cnv/**/*.class
+BIT/BIT/*.class
+WebServerLogFile.log

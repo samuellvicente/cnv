@@ -40,8 +40,9 @@ public class WebServer {
 		final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 		server.createContext("/sudoku", new MyHandler());
 		// be aware! infinite pool of threads! // now it is hardcoded but we need to control it
-		int MAX_N_THREADS = 2;
-		server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
+		//int MAX_N_THREADS = 2;
+		//server.setExecutor(Executors.newFixedThreadPool(MAX_N_THREADS));
+                server.setExecutor(Executors.newCachedThreadPool());
 		server.start();
 
 		System.out.println(server.getAddress().toString());
@@ -144,7 +145,7 @@ public class WebServer {
 				System.out.println(requestsInfo.size());
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 			} finally {
-				ThreadLocalRequestInfo.remove();
+                            ThreadLocalRequestInfo.remove();
 			}
 
 
