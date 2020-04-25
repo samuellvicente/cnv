@@ -51,8 +51,18 @@ Relevant Classes:
 * TempStorage: Runnable class that writes to file. Reads file, empties RequestInfo queue from Webserver and writes again.
 * WebServer: Has a SingleThreadScheduledExecutor that fires every 10s responsible of reading the RequestInfo queue that saves the context of each thread and writing it to a stats.backup file.
 
-Load Balancer
-Load Balancer name: LBcheck
+
+
+
+
+
+
+
+#### System Configurations
+
+
+Load-Balancer:
+
 Scheme: internet-facing
 Port Configuration: 80 (HTTP) forwarding to 8000 (HTTP)
  Configure Health CheckEdit health check
@@ -74,19 +84,7 @@ Stickiness: Disabled
 
 
 
-
-
-
-
-#### System Configurations
-
-
-Load-Balancer:
-
-
-
 Auto-Scaler:
-
 
 
 Launch Group Configuration
@@ -113,8 +111,6 @@ Type; Protocol; Port Range; Source;
 HTTP TCP 80 0.0.0.0/0 
 Custom TCP Rule TCP 8000 0.0.0.0/0 
 SSH TCP 22 0.0.0.0/0
-
-
 
 
 Auto Scaling Group
