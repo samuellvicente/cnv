@@ -49,7 +49,6 @@ public class ICountCNV {
                         bb.addBefore("BIT/ICountCNV", "count", new Integer(bb.size()));
                     }
                 }
-                ci.addAfter("BIT/ICountCNV", "logICount", ci.getClassName());
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }

@@ -1,4 +1,4 @@
-package samples;
+package BIT;
 
 /* ICount.java
  * Sample program using BIT -- counts the number of instructions executed.
@@ -40,21 +40,21 @@ public class ICount {
                 // see java.util.Enumeration for more information on Enumeration class
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements(); ) {
                     Routine routine = (Routine) e.nextElement();
-					routine.addBefore("samples.ICount", "mcount", new Integer(1));
+					//routine.addBefore("BIT/ICount", "mcount", new Integer(1));
                     
                     for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("samples.ICount", "count", new Integer(bb.size()));
+                        bb.addBefore("BIT/ICount", "count", new Integer(bb.size()));
                     }
                 }
-                ci.addAfter("samples.ICount", "printICount", ci.getClassName());
+                ci.addAfter("BIT/ICount", "printICount", ci.getClassName());
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }
     }
     
     public static synchronized void printICount(String foo) {
-        System.out.println(i_count + " instructions in " + b_count + " basic blocks were executed in " + m_count + " methods.");
+        System.out.println("ICOUNT("+i_count + ")BCOUNT(" + b_count + ")");
     }
     
 
