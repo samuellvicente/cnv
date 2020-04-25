@@ -34,3 +34,4 @@ export _JAVA_OPTIONS="-XX:-UseSplitVerifier "$_JAVA_OPTIONS
 javac -cp $CLASSPATH BIT/BIT/*.java
 javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/solver/*.java
 javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/server/*.java
+javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/metrics/*.java
