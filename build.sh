@@ -10,7 +10,7 @@
 
 #source java-config-windows.sh
 #source java-config-rnl-vm.sh
-source java-config-aws.sh
+source $PWD/java-config-aws.sh
 
 
 
@@ -20,18 +20,19 @@ source java-config-aws.sh
 export CLASSPATH=$CLASSPATH:$PWD/instrumented:$PWD/project:$PWD/BIT:$PWD/BIT/samples:$PWD/BIT/BIT
 
 # Remove old .class files
-source clean.sh
+source $PWD/clean.sh
 
 # Making sure the folders required by the instrumentation exist
-mkdir -p instrumented/pt/ulisboa/tecnico/cnv/solver/
-mkdir -p instrumented/pt/ulisboa/tecnico/cnv/server/
-mkdir -p instrumented/pt/ulisboa/tecnico/cnv/util/
+mkdir -p $PWD/instrumented/pt/ulisboa/tecnico/cnv/solver/
+mkdir -p $PWD/instrumented/pt/ulisboa/tecnico/cnv/server/
+mkdir -p $PWD/instrumented/pt/ulisboa/tecnico/cnv/util/
 
 
 #### Compilation
 export _JAVA_OPTIONS="-XX:-UseSplitVerifier "$_JAVA_OPTIONS
 
 javac -cp $CLASSPATH BIT/BIT/*.java
+javac -cp $CLASSPATH BIT/samples/*.java
 javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/solver/*.java
 javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/server/*.java
 javac -cp $CLASSPATH project/pt/ulisboa/tecnico/cnv/metrics/*.java
